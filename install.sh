@@ -8,14 +8,16 @@ R=$(cd "$(dirname "$0")" && pwd)
 MARK="<!-- Built by agent-config-kit/install.sh."
 DRY=0
 UNINSTALL=0
+STATUS=0
 FORCE=""
 
 usage() {
   cat <<USAGE
-Usage: install.sh [--dry-run] [--uninstall] [--tool NAME]...
+Usage: install.sh [--dry-run] [--uninstall] [--status] [--tool NAME]...
 
   --dry-run     Print what would change and touch nothing.
   --uninstall   Remove everything this script created and restore backups.
+  --status      Show the state of each tool profile and change nothing.
   --tool NAME   Install for NAME even if its config folder does not exist yet.
                 NAME is one of: codex, claude, gemini, agents. Repeatable.
 
@@ -30,6 +32,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --dry-run) DRY=1 ;;
     --uninstall) UNINSTALL=1 ;;
+    --status) STATUS=1 ;;
     --tool) shift; [ $# -gt 0 ] || { usage >&2; exit 2; }; FORCE="$FORCE $1" ;;
     -h|--help) usage; exit 0 ;;
     *) usage >&2; exit 2 ;;
@@ -153,6 +156,37 @@ uninstall_skills() {
   done
   return 0
 }
+
+# One line per profile: linked, built, stale (built copy differs from a fresh build),
+# foreign (a file this repo did not create) or missing.
+status_line() { # status_line LABEL PATH KIND
+  if [ "$3" = built ]; then
+    if is_built "$2"; then
+      expected=$(mktemp)
+      { echo "$MARK Edit profile/AGENTS.md or profile/CLAUDE.md there, then re-run install.sh. -->"
+        cat "$R/profile/AGENTS.md"; echo; cat "$R/profile/CLAUDE.md"; } > "$expected"
+      if cmp -s "$expected" "$2"; then state=built; else state="stale (re-run install.sh)"; fi
+      rm -f "$expected"
+    elif [ -e "$2" ]; then state=foreign
+    else state=missing; fi
+  elif points_here "$2"; then state=linked
+  elif [ -e "$2" ]; then state=foreign
+  else state=missing; fi
+  printf '%-10s %-8s %s\n' "$1" "$state" "$2"
+}
+
+show_status() {
+  status_line codex "$HOME/.codex/AGENTS.md" link
+  status_line claude "$HOME/.claude/CLAUDE.md" built
+  status_line gemini "$HOME/.gemini/GEMINI.md" link
+  extra_claude_dirs | while IFS= read -r d; do status_line claude "$d/CLAUDE.md" built; done
+  return 0
+}
+
+if [ "$STATUS" = 1 ]; then
+  show_status
+  exit 0
+fi
 
 if [ "$UNINSTALL" = 1 ]; then
   uninstall_profiles
