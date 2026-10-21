@@ -17,10 +17,10 @@ Usage: install.sh [--dry-run] [--uninstall] [--tool NAME]...
   --dry-run     Print what would change and touch nothing.
   --uninstall   Remove everything this script created and restore backups.
   --tool NAME   Install for NAME even if its config folder does not exist yet.
-                NAME is one of: codex, claude, gemini, agents. Repeatable.
+                NAME is one of: codex, claude, gemini, opencode, agents. Repeatable.
 
 By default a tool is configured only if its folder (~/.codex, ~/.claude,
-~/.gemini, ~/.agents) already exists. Extra Claude config folders
+~/.gemini, ~/.config/opencode, ~/.agents) already exists. Extra Claude config folders
 (for example a second account) can be listed in CLAUDE_CONFIG_DIRS,
 separated by colons.
 USAGE
@@ -111,6 +111,7 @@ extra_claude_dirs() {
 install_profiles() {
   wanted codex "$HOME/.codex" && link "$R/profile/AGENTS.md" "$HOME/.codex/AGENTS.md"
   wanted gemini "$HOME/.gemini" && link "$R/profile/AGENTS.md" "$HOME/.gemini/GEMINI.md"
+  wanted opencode "$HOME/.config/opencode" && link "$R/profile/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
   wanted claude "$HOME/.claude" && build_claude "$HOME/.claude/CLAUDE.md"
   extra_claude_dirs | while IFS= read -r d; do if [ -d "$d" ]; then build_claude "$d/CLAUDE.md"; fi; done
   return 0
@@ -119,6 +120,7 @@ install_profiles() {
 uninstall_profiles() {
   remove_ours "$HOME/.codex/AGENTS.md"
   remove_ours "$HOME/.gemini/GEMINI.md"
+  remove_ours "$HOME/.config/opencode/AGENTS.md"
   remove_ours "$HOME/.claude/CLAUDE.md"
   extra_claude_dirs | while IFS= read -r d; do remove_ours "$d/CLAUDE.md"; done
   return 0

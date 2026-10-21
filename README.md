@@ -2,7 +2,7 @@
 
 One place for your instructions to AI coding agents, installed into every tool you use.
 
-If you use more than one of Codex, Claude Code and Gemini CLI, or more than one machine, you end up with several copies of the same instructions that drift apart. This repo keeps a single profile and a single set of skills, and `install.sh` wires them into each tool.
+If you use more than one of Codex, Claude Code, Gemini CLI and OpenCode, or more than one machine, you end up with several copies of the same instructions that drift apart. This repo keeps a single profile and a single set of skills, and `install.sh` wires them into each tool.
 
 - **One profile, every tool.** Edit `profile/AGENTS.md` once. Codex and Gemini get a symlink; Claude Code gets a built file (shared profile plus Claude-only additions).
 - **Skills shared everywhere.** Each folder in `skills/` is linked into every tool's skills folder.
@@ -20,7 +20,7 @@ cd ~/agent-config
 
 Then edit `profile/AGENTS.md` and re-run `./install.sh` whenever you pull. Symlinked files update instantly; the built Claude file needs the re-run.
 
-Tools are configured only if their folder already exists (`~/.codex`, `~/.claude`, `~/.gemini`, `~/.agents`). Use `--tool NAME` to force one.
+Tools are configured only if their folder already exists (`~/.codex`, `~/.claude`, `~/.gemini`, `~/.config/opencode`, `~/.agents`). Use `--tool NAME` to force one.
 
 ## Layout
 
