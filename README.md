@@ -22,6 +22,14 @@ Then edit `profile/AGENTS.md` and re-run `./install.sh` whenever you pull. Symli
 
 Tools are configured only if their folder already exists (`~/.codex`, `~/.claude`, `~/.gemini`, `~/.agents`). Use `--tool NAME` to force one.
 
+Check the current state of each tool at any time:
+
+```sh
+./install.sh --status
+```
+
+`linked` and `built` are healthy. `stale` means the built Claude file no longer matches `profile/`; re-run `./install.sh`. `foreign` is a file this repo did not create.
+
 ## Layout
 
 ```

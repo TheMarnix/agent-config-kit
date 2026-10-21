@@ -63,7 +63,21 @@ ln -s "$R/skills/gone" "$H/.codex/skills/gone"
 "$R/install.sh" >/dev/null
 check "stale link removed"       test ! -L "$H/.codex/skills/gone"
 
-# 9. bad flags fail
+# 9. --status reports state and changes nothing
+fresh_home; mkdir "$H/.claude" "$H/.codex"
+"$R/install.sh" >/dev/null
+st=$("$R/install.sh" --status)
+check "status: codex linked"     sh -c "echo '$st' | grep -q 'codex *linked'"
+check "status: claude built"     sh -c "echo '$st' | grep -q 'claude *built'"
+check "status: gemini missing"   sh -c "echo '$st' | grep -q 'gemini *missing'"
+echo "extra line" >> "$H/.claude/CLAUDE.md"
+st=$("$R/install.sh" --status)
+check "status: stale detected"   sh -c "echo '$st' | grep -q 'claude *stale'"
+rm "$H/.claude/CLAUDE.md"; echo "mine" > "$H/.claude/CLAUDE.md"
+st=$("$R/install.sh" --status)
+check "status: foreign detected" sh -c "echo '$st' | grep -q 'claude *foreign'"
+
+# 10. bad flags fail
 fresh_home
 "$R/install.sh" --nope >/dev/null 2>&1; rc=$?
 check "bad flag exits 2"         test "$rc" = 2
