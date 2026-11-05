@@ -181,6 +181,7 @@ show_status() {
   status_line codex "$HOME/.codex/AGENTS.md" link
   status_line claude "$HOME/.claude/CLAUDE.md" built
   status_line gemini "$HOME/.gemini/GEMINI.md" link
+  status_line opencode "$HOME/.config/opencode/AGENTS.md" link
   extra_claude_dirs | while IFS= read -r d; do status_line claude "$d/CLAUDE.md" built; done
   return 0
 }
