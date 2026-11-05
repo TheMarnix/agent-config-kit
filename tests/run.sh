@@ -31,6 +31,13 @@ check "idempotent"               test -L "$H/.codex/skills/code-review"
 "$R/install.sh" --tool gemini >/dev/null
 check "forced gemini linked"     test -L "$H/.gemini/GEMINI.md"
 
+# 3b. OpenCode, and removal on uninstall
+fresh_home; mkdir -p "$H/.config/opencode"
+"$R/install.sh" >/dev/null
+check "opencode profile linked"  test -L "$H/.config/opencode/AGENTS.md"
+"$R/install.sh" --uninstall >/dev/null
+check "opencode link removed"    test ! -e "$H/.config/opencode/AGENTS.md"
+
 # 4. --dry-run touches nothing
 fresh_home; mkdir "$H/.claude"
 out=$("$R/install.sh" --dry-run)
