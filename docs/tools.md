@@ -7,6 +7,7 @@
 | Codex | `~/.codex/AGENTS.md` (symlink to `profile/AGENTS.md`) | `~/.codex/skills/<name>` |
 | Claude Code | `~/.claude/CLAUDE.md` (built: `AGENTS.md` + `CLAUDE.md`) | `~/.claude/skills/<name>` |
 | Gemini CLI | `~/.gemini/GEMINI.md` (symlink to `profile/AGENTS.md`) | none |
+| OpenCode | `~/.config/opencode/AGENTS.md` (symlink to `profile/AGENTS.md`) | none |
 | Generic | none | `~/.agents/skills/<name>` |
 
 ## Why Claude gets a built file

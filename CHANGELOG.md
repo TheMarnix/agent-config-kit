@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Install and uninstall OpenCode global rules.
+- Report profile installation status, including stale built Claude profiles.
+
 ## 0.1.0
 
 - Config-driven `install.sh` for Codex, Claude Code, Gemini CLI and the generic `~/.agents/skills` folder.
